@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Disallow: /pages/404.html
+
+Sitemap: https://mundo-do-octogono.vercel.app/sitemap.xml
