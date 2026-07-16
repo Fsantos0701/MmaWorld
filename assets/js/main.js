@@ -1,14 +1,14 @@
 /**
- * MUNDO DO OCTÓGONO — main.js
- * JavaScript vanilla (ES6+), sem dependências externas.
- * Responsável por: navbar, menu mobile, mega menu, busca, toasts,
- * formulários, tabs, back-to-top e pequenas melhorias de UX.
+ * WORLD MMA — main.js
+ * Vanilla JavaScript (ES6+), no external dependencies.
+ * Handles: navbar, mobile menu, mega menu, search, toasts,
+ * forms, tabs, back-to-top and small UX enhancements.
  */
 (() => {
   "use strict";
 
   /* ------------------------------------------------------------------
-   * Utilidades
+   * Utilities
    * ------------------------------------------------------------------ */
   const $ = (sel, ctx = document) => ctx.querySelector(sel);
   const $$ = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
@@ -35,14 +35,14 @@
   };
 
   /* ------------------------------------------------------------------
-   * Ano dinâmico no rodapé
+   * Dynamic year in the footer
    * ------------------------------------------------------------------ */
   $$("[data-current-year]").forEach((el) => {
     el.textContent = new Date().getFullYear();
   });
 
   /* ------------------------------------------------------------------
-   * Navbar: sombra ao rolar
+   * Navbar: shadow on scroll
    * ------------------------------------------------------------------ */
   const navbar = $(".navbar");
   if (navbar) {
@@ -54,7 +54,7 @@
   }
 
   /* ------------------------------------------------------------------
-   * Menu mobile
+   * Mobile menu
    * ------------------------------------------------------------------ */
   const navToggle = $(".nav-toggle");
   const navPrimary = $(".nav-primary");
@@ -67,7 +67,7 @@
       document.body.style.overflow = !expanded ? "hidden" : "";
     });
 
-    // Submenus (mega menu) em modo mobile abrem por clique
+    // Submenus (mega menu) open on click in mobile mode
     $$(".nav-item > .nav-link", navPrimary).forEach((link) => {
       const item = link.closest(".nav-item");
       const mega = $(".mega-menu", item);
@@ -85,7 +85,7 @@
       });
     });
 
-    // Fecha o menu mobile ao redimensionar para desktop
+    // Closes the mobile menu when resizing to desktop
     window.addEventListener("resize", () => {
       if (window.innerWidth > 960 && navPrimary.classList.contains("is-open")) {
         navPrimary.classList.remove("is-open");
@@ -94,7 +94,7 @@
       }
     });
 
-    // Fecha com tecla Esc
+    // Closes with the Esc key
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && navPrimary.classList.contains("is-open")) {
         navPrimary.classList.remove("is-open");
@@ -106,7 +106,7 @@
   }
 
   /* ------------------------------------------------------------------
-   * Modal genérico (busca, vídeo)
+   * Generic modal (search, video)
    * ------------------------------------------------------------------ */
   const openModal = (modalEl) => {
     const overlay = $(".overlay");
@@ -174,7 +174,7 @@
         <strong>${title}</strong>
         <p>${message}</p>
       </div>
-      <button type="button" class="toast-close" aria-label="Fechar notificação">
+      <button type="button" class="toast-close" aria-label="Close notification">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
     `;
@@ -195,11 +195,11 @@
   window.MundoOctogono.showToast = showToast;
 
   /* ------------------------------------------------------------------
-   * Consentimento de cookies
-   * Banner real de aceitar/rejeitar, com escolha salva em localStorage.
-   * Scripts de rastreamento (GA4, Meta Pixel, Snap Pixel etc.) devem
-   * ser registrados via window.MundoOctogono.onCookieConsentAccepted()
-   * em vez de rodar direto no <head> — assim só disparam com consentimento.
+   * Cookie consent
+   * A real accept/reject banner, with the choice saved in localStorage.
+   * Tracking scripts (GA4, Meta Pixel, Snap Pixel, etc.) should be
+   * registered via window.MundoOctogono.onCookieConsentAccepted()
+   * instead of running directly in <head> — that way they only fire with consent.
    * ------------------------------------------------------------------ */
   const COOKIE_CONSENT_KEY = "mo_cookie_consent";
   const consentAcceptedCallbacks = [];
@@ -216,7 +216,7 @@
     try {
       localStorage.setItem(COOKIE_CONSENT_KEY, value);
     } catch (e) {
-      /* localStorage indisponível (ex.: modo privado) — consentimento vale só para a sessão atual */
+      /* localStorage unavailable (e.g. private mode) — consent only applies to the current session */
     }
     if (value === "accepted") {
       consentAcceptedCallbacks.forEach((cb) => cb());
@@ -248,8 +248,8 @@
       setCookieConsent("accepted");
       hideCookieBanner();
       showToast({
-        title: "Preferências salvas",
-        message: "Você aceitou todos os cookies. Pode alterar isso quando quiser no rodapé.",
+        title: "Preferences saved",
+        message: "You've accepted all cookies. You can change this anytime in the footer.",
         type: "success",
       });
     });
@@ -258,8 +258,8 @@
       setCookieConsent("rejected");
       hideCookieBanner();
       showToast({
-        title: "Preferências salvas",
-        message: "Apenas cookies essenciais serão usados.",
+        title: "Preferences saved",
+        message: "Only essential cookies will be used.",
         type: "info",
       });
     });
@@ -278,9 +278,9 @@
   };
 
   /* ------------------------------------------------------------------
-   * Envio real de formulários via FormSubmit (sem backend próprio).
-   * Usa o endpoint AJAX do FormSubmit: retorna JSON em vez de redirecionar,
-   * então a experiência (toast) continua igual, mas o e-mail chega de verdade.
+   * Real form submission via FormSubmit (no backend of our own).
+   * Uses FormSubmit's AJAX endpoint: it returns JSON instead of redirecting,
+   * so the experience (toast) stays the same, but the email actually arrives.
    * ------------------------------------------------------------------ */
   const submitFormReally = async (form) => {
     const action = form.getAttribute("action");
@@ -291,8 +291,8 @@
       "https://formsubmit.co/ajax/"
     );
 
-    // O endpoint AJAX do FormSubmit espera JSON — enviar FormData
-    // (multipart) causa erro 500 no servidor deles.
+    // FormSubmit's AJAX endpoint expects JSON — sending FormData
+    // (multipart) causes a 500 error on their server.
     const payload = {};
     new FormData(form).forEach((value, key) => {
       payload[key] = value;
@@ -315,7 +315,7 @@
   };
 
   /* ------------------------------------------------------------------
-   * Formulário de newsletter
+   * Newsletter form
    * ------------------------------------------------------------------ */
   $$("[data-newsletter-form]").forEach((form) => {
     form.addEventListener("submit", async (e) => {
@@ -327,8 +327,8 @@
       if (!isValid) {
         emailInput?.setAttribute("aria-invalid", "true");
         showToast({
-          title: "E-mail inválido",
-          message: "Verifique o endereço informado e tente novamente.",
+          title: "Invalid email",
+          message: "Check the address you entered and try again.",
           type: "info",
         });
         emailInput?.focus();
@@ -344,15 +344,15 @@
 
       if (result.ok) {
         showToast({
-          title: "Inscrição confirmada",
-          message: "Você receberá nossas próximas atualizações sobre o MMA.",
+          title: "Subscription confirmed",
+          message: "You'll receive our latest MMA updates.",
           type: "success",
         });
         form.reset();
       } else {
         showToast({
-          title: "Não foi possível enviar agora",
-          message: "Tente novamente em instantes ou escreva para world.mma001@gmail.com.",
+          title: "Couldn't send right now",
+          message: "Please try again shortly or email world.mma001@gmail.com.",
           type: "info",
         });
       }
@@ -360,7 +360,7 @@
   });
 
   /* ------------------------------------------------------------------
-   * Formulário de contato — envio real via FormSubmit
+   * Contact form — real submission via FormSubmit
    * ------------------------------------------------------------------ */
   const contactForm = $("[data-contact-form]");
   if (contactForm) {
@@ -380,8 +380,8 @@
 
       if (!valid) {
         showToast({
-          title: "Campos obrigatórios",
-          message: "Preencha todos os campos destacados antes de enviar.",
+          title: "Required fields",
+          message: "Please fill in all the highlighted fields before submitting.",
           type: "info",
         });
         return;
@@ -395,16 +395,16 @@
 
       if (!result.ok) {
         showToast({
-          title: "Não foi possível enviar agora",
-          message: "Tente novamente em instantes ou escreva direto para world.mma001@gmail.com.",
+          title: "Couldn't send right now",
+          message: "Please try again shortly or email world.mma001@gmail.com directly.",
           type: "info",
         });
         return;
       }
 
       showToast({
-        title: "Mensagem enviada",
-        message: "Nossa equipe responderá em até 2 dias úteis.",
+        title: "Message sent",
+        message: "Our team will reply within 2 working days.",
         type: "success",
       });
       contactForm.reset();
@@ -412,14 +412,14 @@
   }
 
   /* ------------------------------------------------------------------
-   * Tabs (usado em Rankings)
+   * Tabs (used in Rankings)
    * ------------------------------------------------------------------ */
   $$("[data-tabs]").forEach((tabGroup) => {
     const tabs = $$(".tab-btn", tabGroup);
     const panelsWrap = document.getElementById(tabGroup.dataset.tabsPanels);
     if (!panelsWrap) return;
-    // Apenas painéis filhos diretos: evita capturar tabs aninhadas (ex.: Rankings, que tem
-    // tabs de categoria de peso dentro dos painéis de gênero).
+    // Only direct child panels: avoids capturing nested tabs (e.g. Rankings, which has
+    // weight-category tabs inside the gender panels).
     const panels = Array.from(panelsWrap.children).filter((el) => el.classList.contains("tab-panel"));
 
     tabs.forEach((tab, i) => {
@@ -462,7 +462,7 @@
   }
 
   /* ------------------------------------------------------------------
-   * Filtro de categoria (select) — navegação client-side simples
+   * Category filter (select) — simple client-side navigation
    * ------------------------------------------------------------------ */
   $$("[data-filter-select]").forEach((select) => {
     select.addEventListener("change", () => {
@@ -477,12 +477,12 @@
       });
 
       const counter = $("[data-filter-count]");
-      if (counter) counter.textContent = `${visible} notícia${visible === 1 ? "" : "s"}`;
+      if (counter) counter.textContent = `${visible} stor${visible === 1 ? "y" : "ies"}`;
     });
   });
 
   /* ------------------------------------------------------------------
-   * Skeleton loading simulado (percepção de carregamento suave)
+   * Simulated skeleton loading (smooth loading perception)
    * ------------------------------------------------------------------ */
   $$("[data-skeleton-target]").forEach((target) => {
     const skeleton = document.getElementById(target.dataset.skeletonTarget);
@@ -495,7 +495,7 @@
   });
 
   /* ------------------------------------------------------------------
-   * Player de vídeo em modal (placeholder acessível)
+   * Video player in modal (accessible placeholder)
    * ------------------------------------------------------------------ */
   $$("[data-video-trigger]").forEach((trigger) => {
     trigger.addEventListener("click", () => {

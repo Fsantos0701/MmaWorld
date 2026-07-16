@@ -1,13 +1,13 @@
 {
-  "name": "Mundo do Octógono — Notícias de MMA",
-  "short_name": "Mundo do Octógono",
-  "description": "Portal independente de notícias, eventos, resultados e rankings de MMA.",
+  "name": "World MMA — MMA News",
+  "short_name": "World MMA",
+  "description": "Independent portal for MMA news, events, results and rankings.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#0a0a0b",
   "theme_color": "#0a0a0b",
-  "lang": "pt-BR",
+  "lang": "en-GB",
   "orientation": "portrait-primary",
   "icons": [
     {
