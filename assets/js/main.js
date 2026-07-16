@@ -291,11 +291,21 @@
       "https://formsubmit.co/ajax/"
     );
 
+    // O endpoint AJAX do FormSubmit espera JSON — enviar FormData
+    // (multipart) causa erro 500 no servidor deles.
+    const payload = {};
+    new FormData(form).forEach((value, key) => {
+      payload[key] = value;
+    });
+
     try {
       const response = await fetch(ajaxUrl, {
         method: "POST",
-        headers: { Accept: "application/json" },
-        body: new FormData(form),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       });
       if (!response.ok) return { ok: false, reason: "http-error" };
       return { ok: true };
